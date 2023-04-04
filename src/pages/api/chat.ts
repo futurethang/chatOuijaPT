@@ -5,31 +5,33 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 dotenv.config();
 
 type Data = {
-    message: string
+    result?: string
 }
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
-const response = async () => {
-    console.log('hello');
-    const data = await openai.listModels()
-    return data.data.data
-};
 
-// @ts-ignore
-export default async function handler(req, res) {
-    const { query } = req.body
-    const message = await response()
-    res.status(200).json(message)
-    // const prompt = 'This is a test of GPT-3. ' + query;
-    // const maxTokens = 5;
-    // const temperature = 0.9;
-    // const topP = 1;
-    // const presencePenalty = 0;
-    // const frequencyPenalty = 0;
-    // const bestOf = 1;
-    // const n = 1;
-    // const stream = false;
+const openai = new OpenAIApi(configuration);
+
+function reviewPrompt(productName: string) {
+    return `Topic: Breakfast
+    Two-Sentence Horror Story: He always stops crying when I pour the milk on his cereal. I just have to remember not to let him see his face on the carton.
+        
+    Topic: ${productName}
+    Two-Sentence Horror Story:`;
+}
+
+export default async function handler(req: NextApiRequest,
+    res: NextApiResponse<Data>) {
+    const completion = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: reviewPrompt(req.query.input as string),
+        max_tokens: 150,
+        temperature: 0.8,
+        top_p: 1.0,
+        frequency_penalty: 0.5,
+        presence_penalty: 0.0
+    });
+    res.status(200).json({ result: completion.data.choices[0].text });
 }
