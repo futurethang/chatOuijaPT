@@ -9,6 +9,6 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  console.log('req', req.query)
+  console.log('fart', req.query)
   res.status(200).json({ input: req.query.input })
 }

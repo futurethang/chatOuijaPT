@@ -11,7 +11,7 @@ export default function Home() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const response = await fetch(`/api/chat?input=${input}`);
+    const response = await fetch(`/api/chat2?input=${input}`);
     const data = await response.text();
     setOutput(data);
   };
