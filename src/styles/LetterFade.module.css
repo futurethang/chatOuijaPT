@@ -1,0 +1,10 @@
+.letter {
+    font-family: var(--font-one);
+    position: fixed;
+    text-align: center;
+    font-size: 4rem;
+    top: 98px;
+    text-transform: capitalize;
+    left: 119px;
+    transition: opacity 0.75s ease-in-out;
+}
