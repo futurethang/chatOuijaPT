@@ -104,6 +104,24 @@ a {
   opacity: 0;
 }
 
+.background-img {
+  position: fixed;
+  /* Absolute position relative to the window */
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Offsets the element's own width/height */
+}
+
+.letter-box {
+  position: fixed;
+  /* Absolute position relative to the window */
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Offsets the element's own width/height */
+
+}
 
 @media (prefers-color-scheme: dark) {
   html {

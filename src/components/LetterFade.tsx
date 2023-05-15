@@ -3,7 +3,8 @@ import styles from '../styles/LetterFade.module.css';
 
 interface LetterFadeProps {
     text: string;
-    delay?: number;
+    delay: number;
+    onAnimationEnd?: () => void;
 }
 
 interface LetterState {
@@ -11,7 +12,7 @@ interface LetterState {
     display: boolean;
 }
 
-const LetterFade: React.FC<LetterFadeProps> = ({ text = '', delay = 500 }) => {
+const LetterFade: React.FC<LetterFadeProps> = ({ text = '', delay = 500, onAnimationEnd }) => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [lettersState, setLettersState] = useState<LetterState[]>(
         Array.from({ length: text.length }, () => ({
@@ -19,7 +20,6 @@ const LetterFade: React.FC<LetterFadeProps> = ({ text = '', delay = 500 }) => {
             display: false,
         }))
     );
-
 
     useEffect(() => {
         setCurrentIndex(0);
@@ -33,6 +33,8 @@ const LetterFade: React.FC<LetterFadeProps> = ({ text = '', delay = 500 }) => {
 
     useEffect(() => {
         if (currentIndex < text.length) {
+            console.log('currentIndex', currentIndex);
+            console.log(text[currentIndex]);
             const fadeInDuration = delay * 0.2;
             const fadeOutDuration = delay * 0.2;
             const stableDuration = delay - fadeInDuration - fadeOutDuration;
@@ -75,6 +77,10 @@ const LetterFade: React.FC<LetterFadeProps> = ({ text = '', delay = 500 }) => {
                 clearTimeout(fadeOut);
                 clearTimeout(nextLetter);
             };
+        } else {
+            if (onAnimationEnd) {
+                onAnimationEnd();
+            }
         }
     }, [currentIndex, text, delay]);
 

@@ -15,12 +15,10 @@
   top: 0;
 }
 
-.letter {
-  font-family: var(--font-one);
+.stylusImg {
   position: fixed;
-  text-align: center;
-  font-size: 4rem;
-  top: 98px;
-  text-transform: capitalize;
-  left: 119px;
+  top: 36%;
+  left: 50%;
+  transform: translate(-51%, -54%);
+  opacity: 12%;
 }
