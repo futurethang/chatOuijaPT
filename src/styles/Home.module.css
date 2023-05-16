@@ -7,7 +7,6 @@
   min-height: 100vh;
 }
 
-.stylus,
 .stylusDiv {
   position: relative;
   height: auto;
@@ -20,5 +19,5 @@
   top: 36%;
   left: 50%;
   transform: translate(-51%, -54%);
-  opacity: 12%;
+  opacity: 50%;
 }

@@ -2,8 +2,9 @@ import Head from 'next/head';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import styles from '@/styles/Home.module.css';
 import LetterFade from '@/components/LetterFade';
+import ChatHistory from '@/components/ChatHistory';
 
-interface ChatHistory {
+interface ChatLog {
   input: string;
   response: string;
 }
@@ -12,8 +13,21 @@ export default function App() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
+  const [chatHistory, setChatHistory] = useState<ChatLog[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+
+  // Load chat history from local storage on mount
+  useEffect(() => {
+    const loadedHistory = localStorage.getItem('chatHistory');
+    if (loadedHistory) {
+      setChatHistory(JSON.parse(loadedHistory));
+    }
+  }, []);
+
+  // Save chat history to local storage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+  }, [chatHistory]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -39,17 +53,10 @@ export default function App() {
         </div>
         <div className="lowerContent">
           <h2>{loading ? 'loading' : ''}</h2>
-          <div className="history">
-            <button onClick={() => setShowHistory(!showHistory)}>Show History</button>
-            {showHistory ? chatHistory.map((chat, i) => {
-              return (
-                <div key={i}>
-                  <p>YOU: {chat.input}</p>
-                  <p>SPIRIT: {chat.response}</p>
-                </div>
-              )
-            }) : ''}
-          </div>
+          <button onClick={() => setShowHistory(!showHistory)}>
+            {showHistory ? 'Hide History' : 'Show History'}
+          </button>
+          {showHistory && <ChatHistory chatHistory={chatHistory} setShowHistory={setShowHistory} />}
           <input type="text" value={input} onChange={(e) => setInput(e.target.value)} />
           <br />
           <button type="submit" onClick={handleSubmit}>Ask Sprit</button>

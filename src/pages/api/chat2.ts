@@ -91,23 +91,9 @@ export default async function handler(req: NextApiRequest,
         frequency_penalty: 0.5,
         presence_penalty: 0.0
     });
-    console.log(chatSetup);
     if (completion.data.choices[0].message) {
         chatSetup.push(completion.data.choices[0].message)
         chatMemo++;
     }
     res.status(200).json(completion.data.choices[0].message as Data);
 }
-
-// const { Configuration, OpenAIApi } = require("openai");
-
-// const configuration = new Configuration({
-//   apiKey: process.env.OPENAI_API_KEY,
-// });
-// const openai = new OpenAIApi(configuration);
-
-// const completion = await openai.createChatCompletion({
-//   model: "gpt-3.5-turbo",
-//   messages: [{role: "user", content: "Hello world"}],
-// });
-// console.log('fart', completion.data.choices[0].message);

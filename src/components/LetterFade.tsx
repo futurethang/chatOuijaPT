@@ -33,8 +33,6 @@ const LetterFade: React.FC<LetterFadeProps> = ({ text = '', delay = 500, onAnima
 
     useEffect(() => {
         if (currentIndex < text.length) {
-            console.log('currentIndex', currentIndex);
-            console.log(text[currentIndex]);
             const fadeInDuration = delay * 0.2;
             const fadeOutDuration = delay * 0.2;
             const stableDuration = delay - fadeInDuration - fadeOutDuration;
