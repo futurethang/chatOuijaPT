@@ -1,0 +1,53 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+.stylusDiv {
+  position: relative;
+  height: auto;
+  width: 100%;
+  top: 0;
+}
+
+.stylusImg {
+  position: fixed;
+  top: 36%;
+  left: 50%;
+  transform: translate(-51%, -54%);
+  opacity: 50%;
+}
+
+.lowerContent {
+  display: flex;
+  flex-direction: column;
+  height: 190px;
+  gap: 1rem;
+  align-items: center;
+}
+
+.loading {}
+
+.output {
+  font-family: var(--font-one);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+
+  button {
+    border: none;
+    border-radius: 100%;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #111;
+    }
+  }
+}
