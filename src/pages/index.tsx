@@ -68,7 +68,7 @@ export default function App() {
             {showReply ? <p>{output}</p> : null}
           </div>
           {showHistory && <ChatHistory chatHistory={chatHistory} setShowHistory={setShowHistory} />}
-          <input type="text" value={input} onChange={(e) => setInput(e.target.value)} />
+          <input className={styles.input} type="text" value={input} onChange={(e) => setInput(e.target.value)} />
           <div className={styles.actions}>
             <button type="submit" onClick={handleSubmit} title='Ask Spirit'>
               <img src="/images/ask.png" width="40" alt="ask the Spirit" />

@@ -23,17 +23,28 @@
 }
 
 .lowerContent {
+  position: relative;
+  bottom: 0px;
   display: flex;
   flex-direction: column;
-  height: 190px;
+  // height: 190px;
+  padding-bottom: 2rem;
   gap: 1rem;
   align-items: center;
+  width: 50%;
 }
 
 .loading {}
 
 .output {
   font-family: var(--font-one);
+}
+
+.input {
+  border-radius: 1rem;
+  height: 2rem;
+  text-align: center;
+  font-family: var(--user-font);
 }
 
 .actions {
