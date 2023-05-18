@@ -1,9 +1,10 @@
 .letter {
+    color: rgb(199 176 140 / 91%);
     font-family: var(--font-one);
     position: fixed;
     text-align: center;
-    font-size: 4rem;
-    top: 25%;
+    font-size: 6rem;
+    top: 24%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-transform: capitalize;
