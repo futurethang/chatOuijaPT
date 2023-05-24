@@ -4,17 +4,13 @@ import styles from '@/styles/Home.module.scss';
 import LetterFade from '@/components/LetterFade';
 import ChatHistory from '@/components/ChatHistory';
 import Loading from '@/components/Loading';
-
-interface ChatLog {
-  input: string;
-  response: string;
-}
+import { ChatMessage } from './api/chat2';
 
 export default function App() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [chatHistory, setChatHistory] = useState<ChatLog[]>([]);
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [showReply, setShowReply] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -32,20 +28,52 @@ export default function App() {
   }, []); // Effect runs once on mount
 
   // Update localStorage whenever chatHistory state changes
-  useEffect(() => {
-    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-  }, [chatHistory]); // Runs whenever chatHistory changes
+  // useEffect(() => {
+  //   localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+  // }, [chatHistory]); // Runs whenever chatHistory changes
+
+  // const handleSubmit = async (e: FormEvent) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setShowReply(false);
+  //   const response = await fetch(`/api/chat2?input=${input}`);
+  //   const data = await response.json();
+  //   setOutput(data.content);
+  //   setChatHistory([...chatHistory, { input, response: data.content }]);
+  //   setLoading(false);
+  // };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setShowReply(false);
-    const response = await fetch(`/api/chat2?input=${input}`);
+  
+    // Load the chat history from localStorage
+    let localStorageChatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+  
+    // Add the user's message to the localStorageChatHistory
+    localStorageChatHistory.push({ role: 'user', content: input });
+  
+    // Send the user's message and the localStorageChatHistory to the server
+    const response = await fetch('/api/chat2', {
+      method: 'POST',
+      body: JSON.stringify({ input: input, chatHistory: localStorageChatHistory }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+  
     const data = await response.json();
-    setOutput(data.content);
-    setChatHistory([...chatHistory, { input, response: data.content }]);
+  
+    // Add the AI's message to the localStorageChatHistory
+    localStorageChatHistory.push({ role: 'ai', content: data.message.content });
+  
+    // Save the updated chat history to localStorage
+    localStorage.setItem('chatHistory', JSON.stringify(localStorageChatHistory));
+  
+    setOutput(data.message.content);
+    setChatHistory([...chatHistory, localStorageChatHistory]);
     setLoading(false);
   };
+  
 
   return (
     <>
