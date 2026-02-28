@@ -15,11 +15,12 @@ interface ChatLog {
   response: string
 }
 
-type AppMode = 'idle' | 'touch' | 'asking' | 'revealing' | 'revealed'
+type AppMode = 'idle' | 'touch' | 'asking' | 'revealing' | 'revealed' | 'error'
 
 export default function OuijaBoard() {
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
+  const [errorMsg, setErrorMsg] = useState('')
   const [mode, setMode] = useState<AppMode>('idle')
   const [chatHistory, setChatHistory] = useState<ChatLog[]>([])
   const [showHistory, setShowHistory] = useState(false)
@@ -48,12 +49,18 @@ export default function OuijaBoard() {
     }
   }, [chatHistory])
 
+  const dismissError = useCallback(() => {
+    setErrorMsg('')
+    setMode('idle')
+  }, [])
+
   const askSpirit = useCallback(
     async (question: string) => {
       if (!question.trim() || mode === 'asking') return
 
       setMode('asking')
       setOutput('')
+      setErrorMsg('')
 
       try {
         const res = await fetch('/api/chat', {
@@ -62,9 +69,14 @@ export default function OuijaBoard() {
           body: JSON.stringify({ message: question.trim() }),
         })
 
-        if (!res.ok) throw new Error('Spirit unreachable')
-
         const data = await res.json()
+
+        if (!res.ok) {
+          setErrorMsg(data.error || 'The spirits are unreachable.')
+          setMode('error')
+          return
+        }
+
         const reply = data.content || 'GOOD BYE'
 
         setOutput(reply)
@@ -72,8 +84,8 @@ export default function OuijaBoard() {
         setMode('revealing')
         setInput('')
       } catch {
-        setOutput('...')
-        setMode('revealing')
+        setErrorMsg('Could not reach the spirit realm. Check your connection.')
+        setMode('error')
       }
     },
     [mode]
@@ -155,6 +167,19 @@ export default function OuijaBoard() {
       {/* Center content */}
       <div className={styles.content}>
         {mode === 'asking' && <Loading />}
+
+        {mode === 'error' && errorMsg && (
+          <div className={styles.errorMessage}>
+            <p className={styles.errorText}>{errorMsg}</p>
+            <button
+              className={styles.errorDismiss}
+              onClick={dismissError}
+              type="button"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
 
         {mode === 'revealed' && output && (
           <div className={styles.revealedMessage}>

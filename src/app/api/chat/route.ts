@@ -91,10 +91,46 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ content: reply })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('OpenAI API error:', error)
+
+    // Pop the user message we optimistically added since it failed
+    if (conversation.length > 1 && conversation[conversation.length - 1].role === 'user') {
+      conversation.pop()
+    }
+
+    const err = error as { status?: number; code?: string; message?: string }
+
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: 'The gateway is sealed — no API key has been provided.', code: 'no_api_key' },
+        { status: 503 }
+      )
+    }
+
+    if (err.status === 401 || err.code === 'invalid_api_key') {
+      return NextResponse.json(
+        { error: 'The key to the other side is invalid.', code: 'invalid_api_key' },
+        { status: 401 }
+      )
+    }
+
+    if (err.status === 429) {
+      return NextResponse.json(
+        { error: 'The spirits are overwhelmed. Try again shortly.', code: 'rate_limit' },
+        { status: 429 }
+      )
+    }
+
+    if (err.status === 503 || err.code === 'service_unavailable') {
+      return NextResponse.json(
+        { error: 'The other side is unreachable right now.', code: 'service_unavailable' },
+        { status: 503 }
+      )
+    }
+
     return NextResponse.json(
-      { error: 'The spirits are unreachable...' },
+      { error: 'The connection to the spirit realm was severed.', code: 'unknown' },
       { status: 500 }
     )
   }
