@@ -55,6 +55,13 @@ let conversation: ChatMessage[] = [
 ]
 
 export async function POST(request: NextRequest) {
+  if (!process.env.OPENAI_API_KEY) {
+    return NextResponse.json(
+      { error: 'The gateway is sealed — no API key has been provided.', code: 'no_api_key' },
+      { status: 503 }
+    )
+  }
+
   try {
     const body = await request.json()
     const userMessage = body.message
@@ -100,13 +107,6 @@ export async function POST(request: NextRequest) {
     }
 
     const err = error as { status?: number; code?: string; message?: string }
-
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        { error: 'The gateway is sealed — no API key has been provided.', code: 'no_api_key' },
-        { status: 503 }
-      )
-    }
 
     if (err.status === 401 || err.code === 'invalid_api_key') {
       return NextResponse.json(
