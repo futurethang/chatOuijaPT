@@ -1,0 +1,133 @@
+:root {
+  --font-spirit: 'Averia Serif Libre', serif;
+  --font-decorative: 'Cinzel Decorative', serif;
+  --font-user: system-ui, -apple-system, sans-serif;
+
+  --color-bg: #000000;
+  --color-spirit-text: #c7b08c;
+  --color-spirit-glow: rgba(199, 176, 140, 0.4);
+  --color-mist: rgba(140, 160, 180, 0.06);
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-surface-hover: rgba(255, 255, 255, 0.08);
+  --color-text-dim: rgba(200, 200, 200, 0.6);
+  --color-text: rgba(200, 200, 200, 0.9);
+  --color-border: rgba(199, 176, 140, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-user);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove iOS input shadows */
+input[type='text'] {
+  -webkit-appearance: none;
+  border: none;
+  color: inherit;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(199, 176, 140, 0.2);
+  border-radius: 2px;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(199, 176, 140, 0.3);
+  color: var(--color-spirit-text);
+}
+
+/* Global keyframes for mist layers */
+@keyframes mistDrift {
+  0% {
+    transform: translateX(-20%) translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(20%) translateY(-5%);
+    opacity: 0;
+  }
+}
+
+@keyframes mistDriftReverse {
+  0% {
+    transform: translateX(20%) translateY(5%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-20%) translateY(0);
+    opacity: 0;
+  }
+}
+
+@keyframes mistRise {
+  0% {
+    transform: translateY(10%) scale(1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-15%) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes gentlePulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes spiritGlow {
+  0%, 100% {
+    text-shadow:
+      0 0 10px rgba(199, 176, 140, 0.3),
+      0 0 20px rgba(199, 176, 140, 0.1);
+  }
+  50% {
+    text-shadow:
+      0 0 15px rgba(199, 176, 140, 0.5),
+      0 0 30px rgba(199, 176, 140, 0.2),
+      0 0 45px rgba(199, 176, 140, 0.1);
+  }
+}

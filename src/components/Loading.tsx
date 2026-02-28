@@ -1,13 +1,16 @@
-import styles from '@/styles/Loading.module.scss';
+'use client'
 
-const Loading = () => {
+import styles from './Loading.module.scss'
+
+export default function Loading() {
   return (
-    <div className={styles.dotsLoading}>
-      <div></div>
-      <div></div>
-      <div></div>
+    <div className={styles.container}>
+      <div className={styles.orb}>
+        <div className={styles.ring} />
+        <div className={styles.ring} />
+        <div className={styles.ring} />
+      </div>
+      <p className={styles.text}>Reaching across the veil...</p>
     </div>
-  );
-};
-
-export default Loading;
+  )
+}
