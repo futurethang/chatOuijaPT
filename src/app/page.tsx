@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, FormEvent } from 'react'
+import { useState, useEffect, useCallback, useRef, FormEvent } from 'react'
 import Image from 'next/image'
 import MistEffect from '@/components/MistEffect'
 import LetterFade from '@/components/LetterFade'
@@ -49,6 +49,9 @@ export default function OuijaBoard() {
     }
   }, [chatHistory])
 
+  // Ref-based guard to prevent concurrent requests
+  const askingRef = useRef(false)
+
   const dismissError = useCallback(() => {
     setErrorMsg('')
     setMode('idle')
@@ -56,8 +59,9 @@ export default function OuijaBoard() {
 
   const askSpirit = useCallback(
     async (question: string) => {
-      if (!question.trim() || mode === 'asking') return
+      if (!question.trim() || askingRef.current) return
 
+      askingRef.current = true
       setMode('asking')
       setOutput('')
       setErrorMsg('')
@@ -86,9 +90,11 @@ export default function OuijaBoard() {
       } catch {
         setErrorMsg('Could not reach the spirit realm. Check your connection.')
         setMode('error')
+      } finally {
+        askingRef.current = false
       }
     },
-    [mode]
+    [] // stable — no deps, uses ref for guard
   )
 
   const handleSubmit = useCallback(

@@ -1,10 +1,15 @@
 import OpenAI from 'openai'
 import { NextRequest, NextResponse } from 'next/server'
 
+let openaiClient: OpenAI | null = null
+
 function getOpenAIClient() {
-  return new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
+  if (!openaiClient) {
+    openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
+  }
+  return openaiClient
 }
 
 const SYSTEM_PROMPT = `You are a mysterious spirit communicating through a Ouija board. You provide short, cryptic answers — typically one or two words, three or four words if the words are short.
@@ -76,7 +81,7 @@ export async function POST(request: NextRequest) {
     conversation.push({ role: 'user', content: userMessage })
 
     const completion = await getOpenAIClient().chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       messages: conversation,
       max_tokens: 60,
       temperature: 0.9,
